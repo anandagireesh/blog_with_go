@@ -1,0 +1,47 @@
+name: Go
+on: 
+  push:
+    branches: 
+      - master
+      - release/* 
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      DOCKERHUB_USERNAME : ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      
+      run: |
+        ls -l
+        echo 'Docker Login'
+        docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+        echo 'Running Build....'
+        docker build . -t anandagireesh/blog-go:go-program-latest
+        echo 'pushing image'
+        docker push anandagireesh/blog-go:go-program-latest
+        echo 'Compleated!'
+        
+    
+#     steps:
+
+#     - name: Set up Go 1.13
+#       uses: actions/setup-go@v1
+#       with:
+#         go-version: 1.13
+#       id: go
+
+#     - name: Check out code into the Go module directory
+#       uses: actions/checkout@v2
+
+#     - name: Get dependencies
+#       run: |
+#         go get -v -t -d ./...
+#         if [ -f Gopkg.toml ]; then
+#             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+#             dep ensure
+#         fi
+
+#     - name: Build
+#       run: go build -v .
